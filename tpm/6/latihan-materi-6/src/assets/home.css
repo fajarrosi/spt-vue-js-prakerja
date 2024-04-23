@@ -1,0 +1,25 @@
+.container-news {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+/* style width : mobile (dibawah 600px) */
+.content {
+  /* flex-grow: 1; */
+  flex-basis: 100%; 
+}
+
+/* style width : 600 - 960px */
+@media only screen and (min-width: 600px) {
+  .content {
+    flex-basis: 50%;
+  }
+}
+
+/* style width : diatas 960px*/
+@media only screen and (min-width: 960px) {
+  .content {
+    flex-basis: 33.333%;
+  }
+}
