@@ -11,7 +11,7 @@ export default new Vuex.Store({
     comments:[]
   },
   getters: {
-    getPostsByTitle: (state) => (id) => {
+    getPostsById: (state) => (id) => {
       return state.posts.find(el => el.id === id)
     },
     getTotalComment: (state) => {
@@ -29,23 +29,25 @@ export default new Vuex.Store({
   actions: {
     async savePosts(store){
       try {
-        let data = await axios.get('https://jsonplaceholder.typicode.com/posts')
-        data = data.data.map((el,index) => {
+        let postData = await axios.get('https://dummyjson.com/posts');
+        let posts = await Promise.all(postData.data.posts.map(async (el, index) => {
+          const userData = await axios.get(`https://dummyjson.com/users/${el.userId}`);
+          const username = userData.data.firstName + ' ' + userData.data.lastName;
           return {
             ...el,
-            author: 'John Doe',
-            urlToImage:`https://source.unsplash.com/random/200x200?sig=${index}`
-          }
-        })
-        store.commit('setPosts',data)
+            author: username,
+            urlToImage: `https://source.unsplash.com/random/200x200?sig=${index}`
+          };
+        }));
+        store.commit('setPosts', posts);
       } catch (error) {
         console.error(error);
       } 
     },
     async getComments(store,payload){
       try {
-        const data = await axios.get(`https://jsonplaceholder.typicode.com/posts/${payload}/comments`)
-        store.commit('setComments',data.data)
+        const data = await axios.get(`https://dummyjson.com/comments/post/${payload}`)
+        store.commit('setComments',data.data.comments)
       } catch (error) {
         console.error(error);
       } 

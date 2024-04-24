@@ -5,8 +5,19 @@
     </v-btn>
     <v-card elevation="2" v-if="detailPost">
       <v-card-title>
-        <div class="text-4xl font-bold text-center">
-          {{ detailPost.title }}
+        <div class="flex flex-col gap-y-4">
+          <div class="text-4xl font-bold text-center">
+            {{ detailPost.title }}
+          </div>
+          <div class="flex gap-1 flex-wrap justify-center">
+            <v-chip
+              color="primary"
+              v-for="(tag, index) in detailPost.tags"
+              :key="index"
+            >
+              {{ tag }}
+            </v-chip>
+          </div>
         </div>
       </v-card-title>
       <v-divider class="mx-4"></v-divider>
@@ -43,7 +54,9 @@
           <v-avatar size="48px">
             <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
           </v-avatar>
-          <div class="text-author font-semibold text-xl">{{ item.name }}</div>
+          <div class="text-author font-semibold text-xl">
+            {{ item.user.username }}
+          </div>
         </div>
       </v-card-text>
       <v-card-subtitle>{{ item.body }}</v-card-subtitle>
@@ -56,7 +69,7 @@ export default {
   name: "DetailView",
   computed: {
     detailPost() {
-      return this.$store.getters.getPostsByTitle(this.$route.params.id);
+      return this.$store.getters.getPostsById(this.$route.params.id);
     },
     comments() {
       return this.$store.state.comments;

@@ -17,10 +17,24 @@
           </v-avatar>
           <div class="text-overline">{{ author }}</div>
         </div>
+        <div class="flex gap-1 flex-wrap">
+          <v-chip
+            small
+            color="primary"
+            v-for="(tag, index) in tags"
+            :key="index"
+          >
+            {{ tag }}
+          </v-chip>
+        </div>
       </v-list-item-content>
 
       <v-list-item-avatar tile size="80">
-        <img :src="urlToImage" alt="logo post" class="w-[200px] h-full" />
+        <img
+          :src="urlToImage ?? require('../assets/dummy.jpg')"
+          alt="logo post"
+          class="w-[200px] h-full"
+        />
       </v-list-item-avatar>
     </v-list-item>
   </v-card>
@@ -45,6 +59,9 @@ export default {
     },
     urlToImage: {
       type: String,
+    },
+    tags: {
+      type: Array,
     },
   },
   methods: {
