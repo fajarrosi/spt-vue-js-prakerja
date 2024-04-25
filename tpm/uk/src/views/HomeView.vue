@@ -3,7 +3,7 @@
     <h1 class="text-4xl py-4 px-[32px] font-semibold text-black text-center">
       Recent Post
     </h1>
-    <div class="px-[500px] pt-4">
+    <div class="px-4">
       <v-text-field
         label="Search"
         placeholder="Search News"
@@ -12,6 +12,18 @@
         clearable
         :loading="searchLoading"
       ></v-text-field>
+    </div>
+
+    <h2 class="text-h6 mb-2 text-center">Choose Category</h2>
+    <div class="flex justify-center">
+      <v-chip-group
+        v-model="selection"
+        active-class="deep-purple--text text--accent-4"
+      >
+        <v-chip v-for="size in sizes" :key="size" :value="size">
+          {{ size }}
+        </v-chip>
+      </v-chip-group>
     </div>
 
     <div class="flex flex-wrap px-3 py-4 gap-y-4" v-if="posts.length > 0">
@@ -49,17 +61,32 @@ export default {
   },
   computed: {
     posts() {
-      return this.search != ""
-        ? this.$store.state.posts.filter(
-            (el) =>
-              el.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-          )
-        : this.$store.state.posts;
+      if (this.search) {
+        return this.$store.state.posts.filter(
+          (el) => el.title.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+        );
+      } else if (this.selection) {
+        return this.$store.state.posts.filter((el) =>
+          el.tags.some((tag) => tag == this.selection)
+        );
+      } else {
+        return this.$store.state.posts;
+      }
     },
   },
   data: () => ({
     search: "",
     searchLoading: false,
+    selection: "",
+    sizes: [
+      "history",
+      "american",
+      "french",
+      "mystery",
+      "magical",
+      "english",
+      "love",
+    ],
   }),
   watch: {
     search() {
@@ -67,6 +94,15 @@ export default {
       setTimeout(() => {
         this.searchLoading = false;
       }, 1000);
+    },
+    selection(val) {
+      console.log("val", val);
+      console.log(
+        "val",
+        this.$store.state.posts.filter((el) =>
+          el.tags.some((tag) => tag == this.search)
+        )
+      );
     },
   },
 };
